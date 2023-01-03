@@ -2,19 +2,28 @@ import express, { Response, Request } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import userRoutes from "./routes/userRoute";
+dotenv.config()
 
 
-const app = express()
-app.use(express.json())
-app.use(cors())
-app.use(cookieParser())
-app.use(logger("dev"))
-
-app.get("/", (req: Request, res: Response)=>{
-    res.status(200).json({
-        message: "Hello world"
-    })
+const app = express();
+app.use(express.json());
+app.use(cors());
+app.use(cookieParser());
+app.use(logger("dev"));
+(async()=>{
+    try {
+        mongoose.connect(process.env.MONGO_URI!, ()=>{
+    console.log("Database connected successfully")
 })
+    } catch (error) {
+        console.log(error)
+    }
+})()
+
+app.use("/api/users", userRoutes)
 
 const PORT = process.env.PORT || 4545
 

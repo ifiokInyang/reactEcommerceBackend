@@ -7,16 +7,26 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const userRoute_1 = __importDefault(require("./routes/userRoute"));
+dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use((0, morgan_1.default)("dev"));
-app.get("/", (req, res) => {
-    res.status(200).json({
-        message: "Hello world"
-    });
-});
+(async () => {
+    try {
+        mongoose_1.default.connect(process.env.MONGO_URI, () => {
+            console.log("Database connected successfully");
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+})();
+app.use("/api/users", userRoute_1.default);
 const PORT = process.env.PORT || 4545;
 app.listen(PORT, () => {
     console.log(`server is listening on http://localhost:${PORT}`);
