@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoute";
 import userRoutes from "./routes/userRoute";
+import productRoutes from "./routes/productRoute";
+
 
 dotenv.config()
 
@@ -27,6 +29,7 @@ app.use(logger("dev"));
 
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
+app.use("/api/products", productRoutes)
 
 const PORT = process.env.PORT || 4545
 

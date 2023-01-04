@@ -29,7 +29,6 @@ const verifyToken = async (req, res, next) => {
         }
         const user = await users_1.default.findOne({ _id: verified.id });
         req.user = user;
-        console.log("req.user is ", req.user);
         next();
     }
     catch (error) {
@@ -51,7 +50,20 @@ const verifyAndAuthorize = async (req, res, next) => {
         }
     });
 };
+const verifyAndAdmin = async (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user.isAdmin) {
+            next();
+        }
+        else {
+            return res.status(403).json({
+                Error: "You are not allowed to perform this operation"
+            });
+        }
+    });
+};
 exports.default = {
     verifyToken,
-    verifyAndAuthorize
+    verifyAndAuthorize,
+    verifyAndAdmin
 };

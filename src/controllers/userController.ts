@@ -3,12 +3,6 @@ import User from "../models/users";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-
-const Test = async(req: Request, res: Response)=>{
-    res.status(200).json({
-        message: "Hello world"
-    })
-}
 const Register = async(req: Request, res: Response)=>{
     try {
         const {username, email, password} = req.body
@@ -76,7 +70,20 @@ const Login = async(req: Request, res: Response)=>{
 }
 const updateUser = async(req: Request, res: Response) => {
     try {
+        const { id } = req.params
+        if(req.body.password){
+            const hashedPassword = await bcrypt.hash(req.body.password, 10)
+            req.body["password"] = hashedPassword
+        }
         
+        const updatedUser = await User.findByIdAndUpdate(id, {
+            $set: req.body
+        }, {new: true})
+    
+        return res.status(200).json({
+            message: "Successfully updated user details",
+            updatedUser
+        })
     } catch (error) {
         return res.status(500).json({
             Error: "An error occured in the update user route", 
@@ -84,10 +91,100 @@ const updateUser = async(req: Request, res: Response) => {
         })
     }
 }
+const deleteUser = async(req: Request, res: Response)=>{
+    try{
+        const { id } = req.params
+        const user = await User.findByIdAndDelete(id)
+        return res.status(200).json({
+            message: "Successfully deleted account",
+            user
+        })
+    } catch(error){
+        return res.status(500).json({
+            Error: "An error occured in the delete user route", 
+            error
+        })
+    }
+}
+const getUserById = async(req: Request, res: Response)=>{
+    try{
+        const { id } = req.params
+        const user = await User.findById(id)
+        return res.status(200).json({
+            message: "Successfully fetched user",
+            user
+        })
+    } catch(error){
+        return res.status(500).json({
+            Error: "An error occured in getting all", 
+            error
+        })
+    }
+}
+const getAllUsers = async(req: Request, res: Response)=>{
+    try{
+        //Enabling limit on req.query
+        const query = req.query.new
+        // const users = query ? await User.find({}).limit(1) : await User.find({})
+        //Sorting in descending order
+        const users = query ? await User.find({}).sort({_id: 1}).limit(2) : await User.find({})
+
+        return res.status(200).json({
+            message: "Successfully fetched all users",
+            users
+        })
+    } catch(error){
+        return res.status(500).json({
+            Error: "An error occured in getting all", 
+            error
+        })
+    }
+}
+const getUserStats = async(req: Request, res: Response)=>{
+    
+    try{
+        
+        //Returns the current date in string, including, year, month, day, and time,
+        const date = new Date()
+        //Returns date in number since 1970, you can perform mathematical operation on this date
+        // const numberDate = Date.now()
+        //Getting last year's date 
+        const lastYear = new Date(date.setFullYear(date.getFullYear() - 1))
+        //We use $match to check the year, then project to get the particular month
+        const data =  await User.aggregate([
+            {$match: {createdAt: {$gte: lastYear}}},
+            {$project:{
+                month: {
+                    $month: "$createdAt"
+                },
+            },
+        },
+        {
+            $group: {
+                _id: "$month",
+                total: { $sum: 1 },
+            }
+        }
+        ])
+
+        return res.status(200).json({
+            message: "Successfully fetched all users",
+            data
+        })
+    } catch(error){
+        return res.status(500).json({
+            Error: "An error occured in getting user stats", 
+            error
+        })
+    }
+}
 
 export default {
-    Test,
     Register,
     Login,
-    updateUser
+    updateUser,
+    deleteUser,
+    getUserById,
+    getAllUsers,
+    getUserStats
 }

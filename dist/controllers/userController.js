@@ -6,11 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const users_1 = __importDefault(require("../models/users"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const Test = async (req, res) => {
-    res.status(200).json({
-        message: "Hello world"
-    });
-};
 const Register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -73,6 +68,18 @@ const Login = async (req, res) => {
 };
 const updateUser = async (req, res) => {
     try {
+        const { id } = req.params;
+        if (req.body.password) {
+            const hashedPassword = await bcrypt_1.default.hash(req.body.password, 10);
+            req.body["password"] = hashedPassword;
+        }
+        const updatedUser = await users_1.default.findByIdAndUpdate(id, {
+            $set: req.body
+        }, { new: true });
+        return res.status(200).json({
+            message: "Successfully updated user details",
+            updatedUser
+        });
     }
     catch (error) {
         return res.status(500).json({
@@ -81,9 +88,99 @@ const updateUser = async (req, res) => {
         });
     }
 };
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await users_1.default.findByIdAndDelete(id);
+        return res.status(200).json({
+            message: "Successfully deleted account",
+            user
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            Error: "An error occured in the delete user route",
+            error
+        });
+    }
+};
+const getUserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await users_1.default.findById(id);
+        return res.status(200).json({
+            message: "Successfully fetched user",
+            user
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            Error: "An error occured in getting all",
+            error
+        });
+    }
+};
+const getAllUsers = async (req, res) => {
+    try {
+        //Enabling limit on req.query
+        const query = req.query.new;
+        // const users = query ? await User.find({}).limit(1) : await User.find({})
+        //Sorting in descending order
+        const users = query ? await users_1.default.find({}).sort({ _id: 1 }).limit(2) : await users_1.default.find({});
+        return res.status(200).json({
+            message: "Successfully fetched all users",
+            users
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            Error: "An error occured in getting all",
+            error
+        });
+    }
+};
+const getUserStats = async (req, res) => {
+    try {
+        //Returns the current date in string, including, year, month, day, and time,
+        const date = new Date();
+        //Returns date in number since 1970, you can perform mathematical operation on this date
+        // const numberDate = Date.now()
+        //Getting last year's date 
+        const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+        //We use $match to check the year, then project to get the particular month
+        const data = await users_1.default.aggregate([
+            { $match: { createdAt: { $gte: lastYear } } },
+            { $project: {
+                    month: {
+                        $month: "$createdAt"
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: "$month",
+                    total: { $sum: 1 },
+                }
+            }
+        ]);
+        return res.status(200).json({
+            message: "Successfully fetched all users",
+            data
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            Error: "An error occured in getting user stats",
+            error
+        });
+    }
+};
 exports.default = {
-    Test,
     Register,
     Login,
-    updateUser
+    updateUser,
+    deleteUser,
+    getUserById,
+    getAllUsers,
+    getUserStats
 };

@@ -49,7 +49,6 @@ const verifyToken = async(req: JwtPayload, res: Response, next: NextFunction) =>
         }
         const user = await User.findOne({_id:verified.id})
         req.user = user
-        console.log("req.user is ", req.user)
         next()
     }catch(error){
         return res.status(500).json({
@@ -72,8 +71,22 @@ const verifyAndAuthorize = async(req: JwtPayload, res: Response, next: NextFunct
       
     })
 }
+const verifyAndAdmin = async(req: JwtPayload, res: Response, next: NextFunction)=>{
+    verifyToken(req, res, ()=>{
+        if(req.user.isAdmin){
+            next()
+        }
+        else{
+            return res.status(403).json({
+                Error: "You are not allowed to perform this operation"
+            })
+        }
+      
+    })
+}
 
 export default {
     verifyToken,
-    verifyAndAuthorize
+    verifyAndAuthorize,
+    verifyAndAdmin
 }
