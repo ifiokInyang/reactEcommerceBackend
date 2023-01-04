@@ -7,6 +7,7 @@ export interface userAttributes{
     password: string
     isAdmin: boolean
     _id: string
+    _doc: {password: string}
 }
 
 const UserSchema = new mongoose.Schema(

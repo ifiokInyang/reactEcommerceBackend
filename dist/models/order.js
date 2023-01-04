@@ -17,6 +17,9 @@ const OrderSchema = new mongoose_1.default.Schema({
             }
         }
     ],
+    amount: { type: Number, required: true },
+    address: { type: Object, required: true },
+    status: { type: String, default: "pending" }
 }, { timestamps: true });
 const Order = mongoose_1.default.model("Order", OrderSchema);
 exports.default = Order;
