@@ -141,7 +141,6 @@ const getAllUsers = async(req: Request, res: Response)=>{
     }
 }
 const getUserStats = async(req: Request, res: Response)=>{
-    
     try{
         
         //Returns the current date in string, including, year, month, day, and time,

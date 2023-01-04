@@ -34,6 +34,9 @@ export interface AuthUser{
 //     }
 // }
 
+
+//We are verifying token to know if user is logged in
+
 const verifyToken = async(req: JwtPayload, res: Response, next: NextFunction) => {
     // let token?: string;
     try{
@@ -58,6 +61,7 @@ const verifyToken = async(req: JwtPayload, res: Response, next: NextFunction) =>
     }
 }
 
+//We are verifying and authorizing to know which user is making a particular request
 const verifyAndAuthorize = async(req: JwtPayload, res: Response, next: NextFunction)=>{
     verifyToken(req, res, ()=>{
         if(req.user.id === req.params.id || req.user.isAdmin){
@@ -71,6 +75,8 @@ const verifyAndAuthorize = async(req: JwtPayload, res: Response, next: NextFunct
       
     })
 }
+
+//We are verifying to know if it is an admin that wants to carry out a certain operation
 const verifyAndAdmin = async(req: JwtPayload, res: Response, next: NextFunction)=>{
     verifyToken(req, res, ()=>{
         if(req.user.isAdmin){

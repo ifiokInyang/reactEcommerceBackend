@@ -100,7 +100,7 @@ const getProductById = async(req: Request, res: Response)=>{
         })
     } catch(error){
         return res.status(500).json({
-            Error: "An error occured in getting all products", 
+            Error: "An error occured in getting a single product", 
             error
         })
     }

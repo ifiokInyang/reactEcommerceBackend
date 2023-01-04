@@ -12,6 +12,7 @@ const users_1 = __importDefault(require("../models/users"));
 //         }
 //     }
 // }
+//We are verifying token to know if user is logged in
 const verifyToken = async (req, res, next) => {
     // let token?: string;
     try {
@@ -38,6 +39,7 @@ const verifyToken = async (req, res, next) => {
         });
     }
 };
+//We are verifying and authorizing to know which user is making a particular request
 const verifyAndAuthorize = async (req, res, next) => {
     verifyToken(req, res, () => {
         if (req.user.id === req.params.id || req.user.isAdmin) {
@@ -50,6 +52,7 @@ const verifyAndAuthorize = async (req, res, next) => {
         }
     });
 };
+//We are verifying to know if it is an admin that wants to carry out a certain operation
 const verifyAndAdmin = async (req, res, next) => {
     verifyToken(req, res, () => {
         if (req.user.isAdmin) {
