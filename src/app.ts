@@ -32,8 +32,8 @@ app.use(logger("dev"));
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/products", productRoutes)
-app.use("/api/cart", cartRoutes)
-app.use("/api/order", orderRoutes)
+app.use("/api/carts", cartRoutes)
+app.use("/api/orders", orderRoutes)
 
 
 

@@ -15,7 +15,7 @@ export interface orderAttributes{
 
 const OrderSchema = new mongoose.Schema(
     {
-        userId: {type: String, required: true, unique: true},
+        userId: {type: String, required: true},
         products: [
             {
                 productId:{

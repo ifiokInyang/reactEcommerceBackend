@@ -33,8 +33,8 @@ app.use((0, morgan_1.default)("dev"));
 app.use("/api/auth", authRoute_1.default);
 app.use("/api/users", userRoute_1.default);
 app.use("/api/products", productRoute_1.default);
-app.use("/api/cart", cartRoute_1.default);
-app.use("/api/order", orderRoute_1.default);
+app.use("/api/carts", cartRoute_1.default);
+app.use("/api/orders", orderRoute_1.default);
 const PORT = process.env.PORT || 4545;
 app.listen(PORT, () => {
     console.log(`server is listening on http://localhost:${PORT}`);

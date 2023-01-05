@@ -5,13 +5,13 @@ import Order from "../models/order";
 
 const createOrder = async(req: Request, res: Response) => {
     try {
-        const { products, amount, address, status  } = req.body
-        const cartProduct = await Order.create({
-            products, amount, address, status
+        const { userId, products, amount, address, status  } = req.body
+        const orderedProduct = await Order.create({
+            userId, products, amount, address, status
         })
         return res.status(200).json({
             message: "Successfully created this Product",
-            cartProduct
+            orderedProduct
 
         })
     } catch (error) {
@@ -103,10 +103,23 @@ const getMonthlyStats = async(req: Request, res: Response)=>{
     //To get the month before last month
     const previousMonth = new Date(date.setMonth(lastMonth.getMonth()-1))
     //We use $match to check the year, then project to get the particular month
-    const income =  await Order.aggregate()
-
+   
+    const income =  await Order.aggregate([
+        {$match: {createdAt: { $gte: previousMonth } } },
+        {$project:{
+                    month: { $month: "$createdAt" },
+                    sales: "$amount",
+            },
+        },
+        {
+            $group: {
+                _id: "$month",
+                total: { $sum: "$sales" },
+            },
+        },
+    ]);
     return res.status(200).json({
-        message: "Successfully fetched all users",
+        message: "Successfully fetched income statistics",
         income
     })
 
