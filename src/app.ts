@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoute";
 import productRoutes from "./routes/productRoute";
 import cartRoutes from "./routes/cartRoute";
 import orderRoutes from "./routes/orderRoute";
+import paymentRoutes from "./routes/stripe"
 
 
 dotenv.config()
@@ -34,6 +35,7 @@ app.use("/api/users", userRoutes)
 app.use("/api/products", productRoutes)
 app.use("/api/carts", cartRoutes)
 app.use("/api/orders", orderRoutes)
+app.use("/api/checkout", paymentRoutes)
 
 
 

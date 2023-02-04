@@ -14,6 +14,7 @@ const userRoute_1 = __importDefault(require("./routes/userRoute"));
 const productRoute_1 = __importDefault(require("./routes/productRoute"));
 const cartRoute_1 = __importDefault(require("./routes/cartRoute"));
 const orderRoute_1 = __importDefault(require("./routes/orderRoute"));
+const stripe_1 = __importDefault(require("./routes/stripe"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -35,6 +36,7 @@ app.use("/api/users", userRoute_1.default);
 app.use("/api/products", productRoute_1.default);
 app.use("/api/carts", cartRoute_1.default);
 app.use("/api/orders", orderRoute_1.default);
+app.use("/api/checkout", stripe_1.default);
 const PORT = process.env.PORT || 4545;
 app.listen(PORT, () => {
     console.log(`server is listening on http://localhost:${PORT}`);

@@ -20,7 +20,10 @@ const handlePayment = async(req: Request, res: Response) => {
             }
         })
     } catch (error) {
-        
+        return res.status(500).json({
+            Error: "An error ocurred in completing your payment",
+            error
+        })
     }
 }
 

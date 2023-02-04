@@ -21,6 +21,10 @@ const handlePayment = async (req, res) => {
         });
     }
     catch (error) {
+        return res.status(500).json({
+            Error: "An error ocurred in completing your payment",
+            error
+        });
     }
 };
 exports.default = {

@@ -65,7 +65,7 @@ const getAllProducts = async (req, res) => {
         // const users = query ? await User.find({}).limit(1) : await User.find({})
         //Sorting in descending order
         if (queryNew) {
-            products = await products_1.default.find({}).sort({ createdAt: 1 }).limit(2);
+            products = await products_1.default.find({}).sort({ createdAt: 1 }).limit(1);
         }
         //meaning if the category in the query params is contained in the category
         else if (queryCategory) {
