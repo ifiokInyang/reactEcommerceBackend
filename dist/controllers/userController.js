@@ -36,7 +36,6 @@ const Register = async (req, res) => {
 };
 const Login = async (req, res) => {
     try {
-        console.log("req headers is ", req.headers);
         const { username } = req.body;
         const user = await users_1.default.findOne({ username });
         if (!user) {

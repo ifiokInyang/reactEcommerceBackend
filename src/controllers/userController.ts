@@ -12,7 +12,8 @@ const Register = async(req: Request, res: Response)=>{
                 Error: "User already exist, use a different email and username"
             })
         }
-        const userPassword = await bcrypt.hash(password, 10)
+        const userPassword = await bcrypt.hash(password, 10);
+
         const newUser = await User.create(    
             {
                 username,
@@ -21,7 +22,6 @@ const Register = async(req: Request, res: Response)=>{
             }
         )
         const savedUser = await User.findOne({email:email})
-
         return res.status(200).json({
             message: "User Successfully registered",
             savedUser
@@ -37,7 +37,6 @@ const Register = async(req: Request, res: Response)=>{
 
 const Login = async(req: Request, res: Response)=>{
     try{
-        console.log("req headers is ", req.headers)
         const { username} = req.body
         const user = await User.findOne({username})
         if(!user){
