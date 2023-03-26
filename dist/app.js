@@ -37,6 +37,11 @@ app.use("/api/products", productRoute_1.default);
 app.use("/api/carts", cartRoute_1.default);
 app.use("/api/orders", orderRoute_1.default);
 app.use("/api/checkout", stripe_1.default);
+app.get("/", (req, res) => {
+    return res.status(200).json({
+        message: "api is running"
+    });
+});
 const PORT = process.env.PORT || 4545;
 app.listen(PORT, () => {
     console.log(`server is listening on http://localhost:${PORT}`);
