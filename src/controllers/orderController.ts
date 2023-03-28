@@ -103,7 +103,6 @@ const getMonthlyStats = async(req: Request, res: Response)=>{
     //To get the month before last month
     const previousMonth = new Date(date.setMonth(lastMonth.getMonth()-1))
     //We use $match to check the year, then project to get the particular month
-   
     const income =  await Order.aggregate([
         {$match: {createdAt: { $gte: previousMonth } } },
         {$project:{

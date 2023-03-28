@@ -10,8 +10,15 @@ const UserSchema = new mongoose_1.default.Schema({
     password: { type: String, required: true, unique: true },
     isAdmin: {
         type: Boolean,
-        default: false
+        default: false,
     },
-}, { timestamps: true });
+}, {
+    toJSON: {
+        transform(doc, ret) {
+            delete ret.password;
+        },
+    },
+    timestamps: true,
+});
 const User = mongoose_1.default.model("User", UserSchema);
 exports.default = User;

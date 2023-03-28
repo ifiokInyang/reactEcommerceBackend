@@ -53,6 +53,7 @@ const Login = async(req: Request, res: Response)=>{
         const token = jwt.sign({id:user._id, email:user.email, isAdmin: user.isAdmin}, 
             `${process.env.APP_SECRET}`, {expiresIn: "3d"})
         //To omit the password while returning the users details as a response
+        //This has already been handled in the model with the toJSON property
         const { password, ...others} = user._doc
         return res.status(200).json({
             message: "You have successfully logged in",
