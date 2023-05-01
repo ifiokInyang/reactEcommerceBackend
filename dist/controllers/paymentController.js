@@ -7,6 +7,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const handlePayment = async (req, res) => {
+    console.log("req body @handlepayment is ", req.body);
     try {
         stripe.charges.create({
             source: req.body.tokenId,
@@ -20,6 +21,7 @@ const handlePayment = async (req, res) => {
                 });
             }
             else {
+                console.log("stripe response is ", { message: stripeRes });
                 return res.status(200).json({
                     message: stripeRes,
                 });
@@ -34,6 +36,7 @@ const handlePayment = async (req, res) => {
     }
 };
 const StripeConfig = async (req, res) => {
+    console.log("req body @strpieconfig is ", req.body);
     try {
         return res.status(200).json({
             publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
@@ -48,6 +51,7 @@ const StripeConfig = async (req, res) => {
     }
 };
 const paymentIntent = async (req, res) => {
+    console.log("req body @payment intent is ", req.body);
     try {
         const payment_intent = await stripe.paymentIntents.create({
             currency: "eur",
@@ -56,6 +60,8 @@ const paymentIntent = async (req, res) => {
                 enabled: true,
             },
         });
+        console.log("payment intent is ", payment_intent);
+        console.log("payment_intent.client_secret is ", payment_intent.client_secret);
         return res.status(200).json({
             clientSecret: payment_intent.client_secret,
         });
